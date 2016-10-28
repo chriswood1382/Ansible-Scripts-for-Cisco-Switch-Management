@@ -1,0 +1,38 @@
+---
+
+- hosts: switches
+  gather_facts: no
+  connection: local
+
+  vars_prompt:
+  - name: "mgmt_username"
+    prompt: "Username"
+    private: no
+  - name: "mgmt_password"
+    prompt: "Password"
+  
+
+  tasks:
+
+  - name: Define Provider
+    set_fact: 
+      cli:
+        host: "{{ inventory_hostname }}"
+        username: "{{ mgmt_username }}"
+        password: "{{ mgmt_password }}"
+   
+  - name: Collect Running Config
+    ios_command: 
+      provider: "{{ cli }}"
+      commands:
+        - show running-config
+    register: config
+
+
+  - name: Save Config to a file
+    copy: 
+      content: "{{ config.stdout_lines }}"
+      dest: "/etc/ansible/switch_backups/config_{{ inventory_hostname }}.txt"
+
+
+ 

@@ -1,0 +1,48 @@
+---
+
+
+- hosts: test
+  gather_facts: no
+  connection: local
+
+
+
+  vars_prompt: 
+  - name: "mgmt_username"
+    prompt: "Username"
+    private: no
+  - name: "mgmt_password" 
+    prompt: "Password"
+
+
+  tasks:
+  
+#A provider contains all information needed to connect to a device. inventory_hostname is gathered from pre-defined inventory hosts file.
+  - name: Define Provider
+    set_fact:
+      cli:
+        host: "{{ inventory_hostname }}"
+        username: "{{ mgmt_username }}"
+        password: "{{ mgmt_password }}"
+
+
+
+  - name: Update Rack Description
+    ios_config: 
+      provider: "{{ cli }}"
+      lines: 
+        - description Right Hand Rack
+      parents: interface gigabitEthernet 1/0/1 
+
+
+
+
+  - name: Write Memory
+    ios_command: 
+      provider: "{{ cli }}"
+      commands: 
+        - write memory
+    register: write
+  
+
+  - debug: var=write.stdout_lines 

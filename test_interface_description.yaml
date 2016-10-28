@@ -1,0 +1,31 @@
+---
+
+- hosts: switches
+  gather_facts: no
+  connection: local
+
+  vars_prompt:
+  - name: "mgmt_username"
+    prompt: "Username"
+    private: no
+  - name: "mgmt_password"
+    prompt: "Password"
+
+
+  tasks:
+  
+  - name: Define Provider information
+    set_fact:
+      cli: 
+        host: "{{ inventory_hostname }}"
+        username: "{{ mgmt_username }}"
+        password: "{{ mgmt_password }}"
+
+   
+  - name: Set Interface Description
+    ios_config:
+      lines: 
+        - description configured by ansible
+      parents: interface GigabitEthernet1/0/2
+      provider: "{{ cli }}"
+
