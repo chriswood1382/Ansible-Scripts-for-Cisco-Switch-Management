@@ -1,4 +1,4 @@
-#Ansible Playbook: snmp_acl.yaml
+#Ansible Playbook: change_snmp_acl.yaml
 #Created by Chris Wood
 #Updated: 9/14/2016
 
@@ -6,7 +6,7 @@
 
 #switches is a subset of devices listed in the pre-defined inventory hosts files located in /etc/ansible/hosts.
 #It will iterate through all hostames in the subset switches
-- hosts: bedford
+- hosts: switches
   gather_facts: no 
   connection: local
  
